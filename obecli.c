@@ -153,6 +153,7 @@ static const struct option long_options[] = {
     {"config-file", required_argument, NULL, 'c'},
     {"shell", no_argument, NULL, 's'},
     {0, 0, 0, 0}};
+static int keep_running = 1;
 
 void obe_cli_printf(const char *name, const char *fmt, ...)
 {
@@ -1481,6 +1482,13 @@ static int parse_command(char *command, obecli_command_t *commmand_list)
         return -1;
 
     return 0;
+}
+
+void signal_quit(int sig)
+{
+    if (!keep_running)
+        raise(sig);
+    keep_running = 0;
 }
 
 int run_with_config(void)
